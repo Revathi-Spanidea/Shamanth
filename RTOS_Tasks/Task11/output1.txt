@@ -1,0 +1,238 @@
+========================================
+MULTI-SENSOR RTOS DEMO
+========================================
+Queues created successfully!
+
+========================================
+SYSTEM READY!
+========================================
+Tasks Running:
+  - AccelTask:   10 Hz (reads accelerometer)
+  - TempTask:    1 Hz  (reads temperature/humidity)
+  - StorageTask: Stores data in RAM buffers
+  - ReportTask:  Reports every 30 seconds
+========================================
+
+Report Task started - Will report every 30 seconds
+========================================
+  I2C1 Bus Configuration
+========================================
+  SDA Pin  : PB9
+  SCL Pin  : PB8
+  Speed    : Standard Mode (100 kHz)
+  Address  : 0x19 (7-bit: 0x19)
+========================================
+
+[INIT] Reading WHO_AM_I register (0x0F)...
+[INIT] WHO_AM_I = 0x47 --> LIS2DU12 detected OK
+
+[INIT] Applying sensor configuration...
+  [CTRL1 @ 0x10] = 0x37 --> IF_ADD_INC enabled, basic config set
+  [CTRL3 @ 0x12] = 0x20 --> High-Performance mode enabled
+  [CTRL4 @ 0x13] = 0x08 --> BDU (Block Data Update) enabled
+  [CTRL5 @ 0x14] = 0x80 --> ODR = 100 Hz | Full Scale = +/-2g
+
+[INIT] Sensor configuration summary:
+  Sensor        : LIS2DU12 (STMicroelectronics)
+  Interface     : I2C1 @ 100 kHz
+  SDA / SCL     : PB9 / PB8
+  Mode          : High-Performance
+  Output Rate   : 100 Hz
+  Full Scale    : +/- 2g
+  Sensitivity   : 0.061 mg/LSB
+  BDU           : Enabled
+  Auto-Increment: Enabled
+
+[INIT] LIS2DU12 ready. Starting data acquisition...
+========================================
+
+========================================
+  SHT40 Temperature/Humidity Sensor Init
+========================================
+  Address: 0x44
+========================================
+
+[OK] Soft reset sent
+[OK] SHT40 detected! Serial: 0x0F496526
+
+[SYNC] Stored pair #1: Accel + Temp
+[SYNC] Stored pair #2: Accel + Temp
+[SYNC] Stored pair #3: Accel + Temp
+[SYNC] Stored pair #4: Accel + Temp
+[SYNC] Stored pair #5: Accel + Temp
+[SYNC] Stored pair #6: Accel + Temp
+[SYNC] Stored pair #7: Accel + Temp
+[SYNC] Stored pair #8: Accel + Temp
+[SYNC] Stored pair #9: Accel + Temp
+[SYNC] Stored pair #10: Accel + Temp
+
+========================================
+STORED DATA REPORT #1
+========================================
+Accelerometer samples: 10 / 50
+Temperature samples:   10 / 50
+
+Last Accelerometer Reading:
+  X = 0.000 g
+  Y = -0.012 g
+  Z = 1.014 g
+  Time = 134253053 ms
+
+Last Temperature Reading:
+  Temperature = 24.8°C
+  Humidity = 44.3%
+  Time = 9403 ms
+========================================
+
+[SYNC] Stored pair #11: Accel + Temp
+[SYNC] Stored pair #12: Accel + Temp
+[SYNC] Stored pair #13: Accel + Temp
+[SYNC] Stored pair #14: Accel + Temp
+[SYNC] Stored pair #15: Accel + Temp
+[SYNC] Stored pair #16: Accel + Temp
+[SYNC] Stored pair #17: Accel + Temp
+[SYNC] Stored pair #18: Accel + Temp
+[SYNC] Stored pair #19: Accel + Temp
+[SYNC] Stored pair #20: Accel + Temp
+
+========================================
+STORED DATA REPORT #2
+========================================
+Accelerometer samples: 20 / 50
+Temperature samples:   20 / 50
+
+Last Accelerometer Reading:
+  X = 0.002 g
+  Y = -0.008 g
+  Z = 1.017 g
+  Time = 134253053 ms
+
+Last Temperature Reading:
+  Temperature = 24.8°C
+  Humidity = 44.4%
+  Time = 19553 ms
+========================================
+
+[SYNC] Stored pair #21: Accel + Temp
+[SYNC] Stored pair #22: Accel + Temp
+[SYNC] Stored pair #23: Accel + Temp
+[SYNC] Stored pair #24: Accel + Temp
+[SYNC] Stored pair #25: Accel + Temp
+[SYNC] Stored pair #26: Accel + Temp
+[SYNC] Stored pair #27: Accel + Temp
+[SYNC] Stored pair #28: Accel + Temp
+[SYNC] Stored pair #29: Accel + Temp
+[SYNC] Stored pair #30: Accel + Temp
+
+========================================
+STORED DATA REPORT #3
+========================================
+Accelerometer samples: 30 / 50
+Temperature samples:   30 / 50
+
+Last Accelerometer Reading:
+  X = 0.004 g
+  Y = -0.013 g
+  Z = 1.016 g
+  Time = 134253053 ms
+
+Last Temperature Reading:
+  Temperature = 24.8°C
+  Humidity = 44.5%
+  Time = 29703 ms
+========================================
+
+[SYNC] Stored pair #31: Accel + Temp
+[SYNC] Stored pair #32: Accel + Temp
+[SYNC] Stored pair #33: Accel + Temp
+[SYNC] Stored pair #34: Accel + Temp
+[SYNC] Stored pair #35: Accel + Temp
+[SYNC] Stored pair #36: Accel + Temp
+[SYNC] Stored pair #37: Accel + Temp
+[SYNC] Stored pair #38: Accel + Temp
+[SYNC] Stored pair #39: Accel + Temp
+[SYNC] Stored pair #40: Accel + Temp
+
+========================================
+STORED DATA REPORT #4
+========================================
+Accelerometer samples: 40 / 50
+Temperature samples:   40 / 50
+
+Last Accelerometer Reading:
+  X = 0.001 g
+  Y = -0.011 g
+  Z = 1.015 g
+  Time = 134253053 ms
+
+Last Temperature Reading:
+  Temperature = 24.8°C
+  Humidity = 44.5%
+  Time = 39853 ms
+========================================
+
+[SYNC] Stored pair #41: Accel + Temp
+[SYNC] Stored pair #42: Accel + Temp
+[SYNC] Stored pair #43: Accel + Temp
+[SYNC] Stored pair #44: Accel + Temp
+[SYNC] Stored pair #45: Accel + Temp
+[SYNC] Stored pair #46: Accel + Temp
+[SYNC] Stored pair #47: Accel + Temp
+[SYNC] Stored pair #48: Accel + Temp
+[SYNC] Stored pair #49: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+
+========================================
+STORED DATA REPORT #5
+========================================
+Accelerometer samples: 50 / 50
+Temperature samples:   50 / 50
+
+Last Accelerometer Reading:
+  X = 0.002 g
+  Y = -0.012 g
+  Z = 1.016 g
+  Time = 134253053 ms
+
+Last Temperature Reading:
+  Temperature = 24.8°C
+  Humidity = 44.3%
+  Time = 50003 ms
+========================================
+
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+
+========================================
+STORED DATA REPORT #6
+========================================
+Accelerometer samples: 50 / 50
+Temperature samples:   50 / 50
+
+Last Accelerometer Reading:
+  X = 0.002 g
+  Y = -0.012 g
+  Z = 1.016 g
+  Time = 134253053 ms
+
+Last Temperature Reading:
+  Temperature = 24.8°C
+  Humidity = 44.3%
+  Time = 50003 ms
+========================================
+
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+[SYNC] Stored pair #50: Accel + Temp
+

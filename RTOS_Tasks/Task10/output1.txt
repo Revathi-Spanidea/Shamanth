@@ -1,0 +1,352 @@
+========================================
+MULTI-SENSOR RTOS DEMO
+========================================
+Queues created successfully!
+
+========================================
+SYSTEM READY!
+========================================
+Tasks Running:
+  - AccelTask:   10 Hz (reads accelerometer)
+  - TempTask:    1 Hz  (reads temperature/humidity)
+  - StorageTask: Stores data in RAM buffers
+  - ReportTask:  Reports every 30 seconds
+========================================
+
+Storage Task started - Saving data to memory
+========================================
+  I2C1 Bus Configuration
+========================================
+  SDA Pin  : PB9
+  SCL Pin  : PB8
+  Speed    : Standard Mode (100 kHz)
+  Address  : 0x19 (7-bit: 0x19)
+========================================
+
+[INIT] Reading WHO_AM_I register (0x0F)...
+[INIT] WHO_AM_I = 0x47 --> LIS2DU12 detected OK
+
+[INIT] Applying sensor configuration...
+  [CTRL1 @ 0x10] = 0x37 --> IF_ADD_INC enabled, basic config set
+  [CTRL3 @ 0x12] = 0x20 --> High-Performance mode enabled
+  [CTRL4 @ 0x13] = 0x08 --> BDU (Block Data Update) enabled
+  [CTRL5 @ 0x14] = 0x80 --> ODR = 100 Hz | Full Scale = +/-2g
+
+[INIT] Sensor configuration summary:
+  Sensor        : LIS2DU12 (STMicroelectronics)
+  Interface     : I2C1 @ 100 kHz
+  SDA / SCL     : PB9 / PB8
+  Mode          : High-Performance
+  Output Rate   : 100 Hz
+  Full Scale    : +/- 2g
+  Sensitivity   : 0.061 mg/LSB
+  BDU           : Enabled
+  Auto-Increment: Enabled
+
+[INIT] LIS2DU12 ready. Starting data acquisition...
+========================================
+
+Accel Task started - Reading at 10 Hz (every 100ms)
+[OK] SHT40 detected! Serial: 0x0F496526
+
+Temp Task started - Reading at 1 Hz (every 1000ms)
+  [STORAGE] Accel sample #1 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #1 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #2 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #2 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #3 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #3 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #4 saved to RAM
+Temp: 25.0°C Hum: 44.3%
+  [STORAGE] Temp sample #4 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #5 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #5 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #6 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #6 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #7 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #7 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #8 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #8 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #9 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #9 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #10 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #10 saved to RAM
+
+========================================
+STORED DATA REPORT #1
+========================================
+Accelerometer samples: 10 / 50
+Temperature samples:   10 / 50
+
+Last Accelerometer Reading:
+  X = 0.004 g
+  Y = -0.010 g
+  Z = 1.015 g
+  Time = 2779096485 ms
+
+Last Temperature Reading:
+  Temperature = 25.0°C
+  Humidity = 44.4%
+  Time = 9417 ms
+========================================
+
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #11 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #11 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #12 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #12 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #13 saved to RAM
+Temp: 25.0°C Hum: 44.4%
+  [STORAGE] Temp sample #13 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #14 saved to RAM
+Temp: 25.0°C Hum: 44.5%
+  [STORAGE] Temp sample #14 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #15 saved to RAM
+Temp: 25.0°C Hum: 44.6%
+  [STORAGE] Temp sample #15 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #16 saved to RAM
+Temp: 25.0°C Hum: 44.8%
+  [STORAGE] Temp sample #16 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #17 saved to RAM
+Temp: 25.0°C Hum: 45.0%
+  [STORAGE] Temp sample #17 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #18 saved to RAM
+Temp: 25.0°C Hum: 45.1%
+  [STORAGE] Temp sample #18 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #19 saved to RAM
+Temp: 25.0°C Hum: 45.2%
+  [STORAGE] Temp sample #19 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #20 saved to RAM
+Temp: 25.0°C Hum: 45.3%
+  [STORAGE] Temp sample #20 saved to RAM
+
+========================================
+STORED DATA REPORT #2
+========================================
+Accelerometer samples: 20 / 50
+Temperature samples:   20 / 50
+
+Last Accelerometer Reading:
+  X = 0.000 g
+  Y = -0.013 g
+  Z = 1.017 g
+  Time = 2779096485 ms
+
+Last Temperature Reading:
+  Temperature = 25.0°C
+  Humidity = 45.3%
+  Time = 19597 ms
+========================================
+
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #21 saved to RAM
+Temp: 25.1°C Hum: 45.4%
+  [STORAGE] Temp sample #21 saved to RAM
+Accel: X=0.01 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #22 saved to RAM
+Temp: 25.3°C Hum: 47.7%
+  [STORAGE] Temp sample #22 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #23 saved to RAM
+Temp: 25.2°C Hum: 50.8%
+  [STORAGE] Temp sample #23 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #24 saved to RAM
+Temp: 25.3°C Hum: 52.4%
+  [STORAGE] Temp sample #24 saved to RAM
+Accel: X=-0.00 Y=-0.02 Z=1.01
+  [STORAGE] Accel sample #25 saved to RAM
+Temp: 25.4°C Hum: 53.6%
+  [STORAGE] Temp sample #25 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #26 saved to RAM
+Temp: 25.3°C Hum: 53.9%
+  [STORAGE] Temp sample #26 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #27 saved to RAM
+Temp: 25.3°C Hum: 52.9%
+  [STORAGE] Temp sample #27 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #28 saved to RAM
+Temp: 25.3°C Hum: 51.8%
+  [STORAGE] Temp sample #28 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #29 saved to RAM
+Temp: 25.3°C Hum: 50.6%
+  [STORAGE] Temp sample #29 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #30 saved to RAM
+Temp: 25.3°C Hum: 49.7%
+  [STORAGE] Temp sample #30 saved to RAM
+
+========================================
+STORED DATA REPORT #3
+========================================
+Accelerometer samples: 30 / 50
+Temperature samples:   30 / 50
+
+Last Accelerometer Reading:
+  X = 0.002 g
+  Y = -0.011 g
+  Z = 1.013 g
+  Time = 2779096485 ms
+
+Last Temperature Reading:
+  Temperature = 25.3°C
+  Humidity = 49.7%
+  Time = 29777 ms
+========================================
+
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #31 saved to RAM
+Temp: 25.3°C Hum: 48.7%
+  [STORAGE] Temp sample #31 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #32 saved to RAM
+Temp: 25.3°C Hum: 47.9%
+  [STORAGE] Temp sample #32 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #33 saved to RAM
+Temp: 25.3°C Hum: 47.3%
+  [STORAGE] Temp sample #33 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #34 saved to RAM
+Temp: 25.3°C Hum: 46.7%
+  [STORAGE] Temp sample #34 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #35 saved to RAM
+Temp: 25.3°C Hum: 46.4%
+  [STORAGE] Temp sample #35 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.01
+  [STORAGE] Accel sample #36 saved to RAM
+Temp: 25.3°C Hum: 46.1%
+  [STORAGE] Temp sample #36 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #37 saved to RAM
+Temp: 25.3°C Hum: 45.8%
+  [STORAGE] Temp sample #37 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #38 saved to RAM
+Temp: 25.3°C Hum: 45.5%
+  [STORAGE] Temp sample #38 saved to RAM
+Accel: X=0.01 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #39 saved to RAM
+Temp: 25.3°C Hum: 45.3%
+  [STORAGE] Temp sample #39 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #40 saved to RAM
+Temp: 25.2°C Hum: 45.0%
+  [STORAGE] Temp sample #40 saved to RAM
+
+========================================
+STORED DATA REPORT #4
+========================================
+Accelerometer samples: 40 / 50
+Temperature samples:   40 / 50
+
+Last Accelerometer Reading:
+  X = 0.002 g
+  Y = -0.012 g
+  Z = 1.019 g
+  Time = 2779096485 ms
+
+Last Temperature Reading:
+  Temperature = 25.2°C
+  Humidity = 45.0%
+  Time = 39957 ms
+========================================
+
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #41 saved to RAM
+Temp: 25.3°C Hum: 44.8%
+  [STORAGE] Temp sample #41 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #42 saved to RAM
+Temp: 25.3°C Hum: 44.7%
+  [STORAGE] Temp sample #42 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #43 saved to RAM
+Temp: 25.3°C Hum: 44.6%
+  [STORAGE] Temp sample #43 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #44 saved to RAM
+Temp: 25.3°C Hum: 44.5%
+  [STORAGE] Temp sample #44 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #45 saved to RAM
+Temp: 25.3°C Hum: 44.5%
+  [STORAGE] Temp sample #45 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #46 saved to RAM
+Temp: 25.3°C Hum: 44.5%
+  [STORAGE] Temp sample #46 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #47 saved to RAM
+Temp: 25.3°C Hum: 44.5%
+  [STORAGE] Temp sample #47 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #48 saved to RAM
+Temp: 25.3°C Hum: 44.5%
+  [STORAGE] Temp sample #48 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #49 saved to RAM
+Temp: 25.2°C Hum: 44.5%
+  [STORAGE] Temp sample #49 saved to RAM
+Accel: X=0.00 Y=-0.01 Z=1.02
+  [STORAGE] Accel sample #50 saved to RAM
+Temp: 25.2°C Hum: 44.6%
+  [STORAGE] Temp sample #50 saved to RAM
+
+========================================
+STORED DATA REPORT #5
+========================================
+Accelerometer samples: 50 / 50
+Temperature samples:   50 / 50
+
+Last Accelerometer Reading:
+  X = 0.002 g
+  Y = -0.008 g
+  Z = 1.015 g
+  Time = 2779096485 ms
+
+Last Temperature Reading:
+  Temperature = 25.2°C
+  Humidity = 44.6%
+  Time = 50137 ms
+========================================
+
+Accel: X=0.00 Y=-0.01 Z=1.02
+Temp: 25.3°C Hum: 44.6%
+Accel: X=0.00 Y=-0.01 Z=1.02
+Temp: 25.2°C Hum: 44.6%
+Accel: X=0.00 Y=-0.01 Z=1.01
+
