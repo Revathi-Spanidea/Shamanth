@@ -60,11 +60,11 @@ RTOS in Embedded Applications
 4. Write an application to **Implement multiple tasks with different priorities and observe preemption behavior** ✅  
 5. Write an application to **Create two tasks: one task sends sensor data to a queue, and another task reads and processes it** ✅  
 6. Write an application to **Use task notifications instead of semaphores to trigger tasks based on external inputs** ✅  
-7. Write an application to **Create software timers that trigger periodic tasks (e.g., sensor reading, logging)** ⏳  
-8. Write an application to **Dynamically create and delete tasks based on system requirements** ⏳  
-9. Write an application to **Implement a low-power mode using the FreeRTOS idle task hook** ⏳  
-10. Write an application to **Read multiple sensors at different rates and store data in memory using scheduled tasks** ⏳  
-11. Write an application to **Use FreeRTOS event groups to synchronize multiple tasks based on multiple conditions** ⏳  
+7. Write an application to **Create software timers that trigger periodic tasks (e.g., sensor reading, logging)** ✅  
+8. Write an application to **Dynamically create and delete tasks based on system requirements** ✅  
+9. Write an application to **Implement a low-power mode using the FreeRTOS idle task hook** ✅  
+10. Write an application to **Read multiple sensors at different rates and store data in memory using scheduled tasks** ✅  
+11. Write an application to **Use FreeRTOS event groups to synchronize multiple tasks based on multiple conditions** ✅  
 12. Write an application to **Implement UART communication where multiple tasks can send and receive messages concurrently** ⏳  
 13. Write an application to **Use an external interrupt (e.g., button press) to wake up a FreeRTOS task** ⏳  
 14. Write an application to **Implement Producer-Consumer model with queues (sensor data generation and processing)** ⏳  
