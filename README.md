@@ -89,7 +89,7 @@ RTOS in Embedded Applications
 4. Write an application to **implement multiple tasks with different priorities and observe preemption behavior** ✅  
    🔗 [View Code](./RTOS_Tasks/Task4)  
 5. Write an application to **create two tasks: one sends sensor data to a queue and another processes it** ✅  
-   🔗 [View Code](./BareMetal_&_HAL_Lib_Tasks/Task5)  
+   🔗 [View Code](./RTOS_Tasks/Task5)  
 6. Write an application to **use task notifications instead of semaphores for task triggering** ✅  
    🔗 [View Code](./RTOS_Tasks/Task6)
 7. Write an application to **create software timers for periodic tasks (sensor reading, logging)** ✅  
