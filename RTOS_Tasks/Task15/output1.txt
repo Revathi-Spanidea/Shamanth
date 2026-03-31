@@ -1,0 +1,223 @@
+========================================
+   PRIORITY INVERSION DEMO
+========================================
+
+SCENARIO:
+----------
+1. Low task acquires resource (holds for 5 sec)
+2. High task needs same resource -> gets BLOCKED
+3. Medium task preempts Low task (doesn't need resource)
+4. High task stays blocked -> PRIORITY INVERSION!
+
+Task Priorities:
+  [HIGH]   - Priority 3 (needs resource)
+  [MEDIUM] - Priority 2 (CPU-bound, no resource)
+  [LOW]    - Priority 1 (holds resource)
+========================================
+
+[HIGH] Task started (Priority: HIGH)
+[HIGH] This task NEEDS the shared resource!
+[HIGH] Will be blocked if resource is held by lower priority task
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #1)
+[HIGH] Was BLOCKED for 0 ms! (Priority Inversion!)
+[HIGH] Using resource... New value: 100
+[MEDIUM] Task started (Priority: MEDIUM)
+[MEDIUM] This task does NOT need the shared resource
+[MEDIUM] But it will PREEMPT the low priority task!
+
+[MEDIUM] Running... (Execution #1)
+[MEDIUM] Doing medium priority work...
+[LOW] Task started (Priority: LOW)
+[LOW] Will hold resource for 5000 ms when acquired
+
+
+[LOW] Attempting to acquire resource...
+[HIGH] Resource released
+
+[LOW] *** RESOURCE ACQUIRED *** (Lock #1)
+[LOW] Holding resource for 5000 ms...
+[LOW] (Medium & High priority tasks are now blocked!)
+
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #2)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #3)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #4)
+[MEDIUM] Doing medium priority work...
+
+[HIGH] Attempting to acquire resource...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #5)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #6)
+[MEDIUM] Doing medium priority work...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #2)
+[HIGH] Was BLOCKED for 2008 ms! (Priority Inversion!)
+[HIGH] Using resource... New value: 210
+
+[LOW] *** RESOURCE RELEASED ***
+[LOW] Resource value: 210
+
+[MEDIUM] Work complete.
+
+[HIGH] Resource released
+
+[MEDIUM] Running... (Execution #7)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #8)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #9)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #3)
+[HIGH] Was BLOCKED for 0 ms! (Priority Inversion!)
+[HIGH] Using resource... New value: 310
+[HIGH] Resource released
+
+[MEDIUM] Running... (Execution #10)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #11)
+[MEDIUM] Doing medium priority work...
+
+[LOW] Attempting to acquire resource...
+[LOW] *** RESOURCE ACQUIRED *** (Lock #2)
+[LOW] Holding resource for 5000 ms...
+[LOW] (Medium & High priority tasks are now blocked!)
+
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #12)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+
+[HIGH] Attempting to acquire resource...
+[MEDIUM] Running... (Execution #13)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #14)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #15)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #16)
+[MEDIUM] Doing medium priority work...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #4)
+[HIGH] Was BLOCKED for 3684 ms! (Priority Inversion!)
+[HIGH] Using resource... New value: 420
+
+[LOW] *** RESOURCE RELEASED ***
+[LOW] Resource value: 420
+
+[HIGH] Resource released
+
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #17)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #18)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #19)
+[MEDIUM] Doing medium priority work...
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #5)
+[HIGH] Was BLOCKED for 0 ms! (Priority Inversion!)
+[HIGH] Using resource... New value: 520
+[MEDIUM] Work complete.
+
+[HIGH] Resource released
+
+[MEDIUM] Running... (Execution #20)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #21)
+[MEDIUM] Doing medium priority work...
+
+[LOW] Attempting to acquire resource...
+[LOW] *** RESOURCE ACQUIRED *** (Lock #3)
+[LOW] Holding resource for 5000 ms...
+[LOW] (Medium & High priority tasks are now blocked!)
+
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #22)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+
+[HIGH] Attempting to acquire resource...
+[MEDIUM] Running... (Execution #23)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #24)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #25)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #26)
+[MEDIUM] Doing medium priority work...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #6)
+[HIGH] Was BLOCKED for 3764 ms! (Priority Inversion!)
+[HIGH] Using resource... New value: 630
+
+[LOW] *** RESOURCE RELEASED ***
+[LOW] Resource value: 630
+
+[HIGH] Resource released
+
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #27)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #28)
+[MEDIUM] Doing medium priority work...
+[MEDIUM] Work complete.
+
+[MEDIUM] Running... (Execution #29)
+[MEDIUM] Doing medium priority work...
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #7)
+[HIGH] Was BLOCKED for 0 ms! (Priority Inversion!)
+[HIGH] Using resource... New value: 730
+[MEDIUM] Work complete.
+
+[HIGH] Resource released
+

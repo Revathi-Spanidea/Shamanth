@@ -1,0 +1,121 @@
+========================================
+   NORMAL CONDITION DEMO
+   (NO Priority Inversion)
+========================================
+
+SCENARIO:
+----------
+1. Low task acquires resource (holds for 5 sec)
+2. High task needs same resource -> gets BLOCKED
+3. NO medium task to interfere
+4. Low task continues running (nothing preempts it)
+5. Low task releases resource -> High task runs
+
+Task Priorities:
+  [HIGH] - Priority 2 (needs resource)
+  [LOW]  - Priority 1 (holds resource)
+========================================
+
+[HIGH] Task started (Priority: HIGH)
+[HIGH] This task NEEDS the shared resource!
+[HIGH] Will be blocked if resource is held by lower priority task
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #1)
+[HIGH] Acquired immediately (0 ms wait)
+[HIGH] Using resource... New value: 100
+[LOW] Task started (Priority: LOW)
+[LOW] Will hold resource for 5000 ms when acquired
+
+
+[LOW] Attempting to acquire resource (Run #1)...
+[HIGH] Resource released
+
+[LOW] *** RESOURCE ACQUIRED *** (Lock #1)
+[LOW] Holding resource for 5000 ms...
+[LOW] (High priority task will be blocked if it tries to acquire)
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #2)
+[HIGH] Was BLOCKED for 2009 ms
+[HIGH] Using resource... New value: 210
+
+[LOW] *** RESOURCE RELEASED ***
+[LOW] Resource value: 210
+
+[HIGH] Resource released
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #3)
+[HIGH] Acquired immediately (0 ms wait)
+[HIGH] Using resource... New value: 310
+[HIGH] Resource released
+
+
+[LOW] Attempting to acquire resource (Run #2)...
+[LOW] *** RESOURCE ACQUIRED *** (Lock #2)
+[LOW] Holding resource for 5000 ms...
+[LOW] (High priority task will be blocked if it tries to acquire)
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #4)
+[HIGH] Was BLOCKED for 3669 ms
+[HIGH] Using resource... New value: 420
+
+[LOW] *** RESOURCE RELEASED ***
+[LOW] Resource value: 420
+
+[HIGH] Resource released
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #5)
+[HIGH] Acquired immediately (0 ms wait)
+[HIGH] Using resource... New value: 520
+[HIGH] Resource released
+
+
+[LOW] Attempting to acquire resource (Run #3)...
+[LOW] *** RESOURCE ACQUIRED *** (Lock #3)
+[LOW] Holding resource for 5000 ms...
+[LOW] (High priority task will be blocked if it tries to acquire)
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #6)
+[HIGH] Was BLOCKED for 3767 ms
+[HIGH] Using resource... New value: 630
+
+[LOW] *** RESOURCE RELEASED ***
+[LOW] Resource value: 630
+
+[HIGH] Resource released
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #7)
+[HIGH] Acquired immediately (0 ms wait)
+[HIGH] Using resource... New value: 730
+[HIGH] Resource released
+
+
+[LOW] Attempting to acquire resource (Run #4)...
+[LOW] *** RESOURCE ACQUIRED *** (Lock #4)
+[LOW] Holding resource for 5000 ms...
+[LOW] (High priority task will be blocked if it tries to acquire)
+
+
+[HIGH] Attempting to acquire resource...
+[HIGH] *** RESOURCE ACQUIRED *** (Attempt #8)
+[HIGH] Was BLOCKED for 3767 ms
+[HIGH] Using resource... New value: 840
+
+[LOW] *** RESOURCE RELEASED ***
+[LOW] Resource value: 840
+
+[HIGH] Resource released
+

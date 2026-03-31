@@ -1,0 +1,187 @@
+========================================
+PRODUCER-CONSUMER DEMO WITH QUEUES
+========================================
+System Initializing...
+Queue created successfully! (Size: 10 messages)
+[CONSUMER] Task started - Waiting for data from queue...
+
+[MONITOR] Task started - Reporting every 10 seconds
+
+========================================
+  I2C1 Bus Configuration
+========================================
+  SDA Pin  : PB9
+  SCL Pin  : PB8
+  Speed    : Standard Mode (100 kHz)
+  Address  : 0x19 (7-bit: 0x19)
+========================================
+
+[INIT] Reading WHO_AM_I register (0x0F)...
+[INIT] WHO_AM_I = 0x47 --> LIS2DU12 detected OK
+
+[INIT] Applying sensor configuration...
+  [CTRL1 @ 0x10] = 0x37 --> IF_ADD_INC enabled, basic config set
+  [CTRL3 @ 0x12] = 0x20 --> High-Performance mode enabled
+  [CTRL4 @ 0x13] = 0x08 --> BDU (Block Data Update) enabled
+  [CTRL5 @ 0x14] = 0x80 --> ODR = 100 Hz | Full Scale = +/-2g
+
+[INIT] Sensor configuration summary:
+  Sensor        : LIS2DU12 (STMicroelectronics)
+  Interface     : I2C1 @ 100 kHz
+  SDA / SCL     : PB9 / PB8
+  Mode          : High-Performance
+  Output Rate   : 100 Hz
+  Full Scale    : +/- 2g
+  Sensitivity   : 0.061 mg/LSB
+  BDU           : Enabled
+  Auto-Increment: Enabled
+
+[INIT] LIS2DU12 ready. Starting data acquisition...
+========================================
+
+
+[PRODUCER] Task started - Reading accelerometer at 2 Hz
+[PRODUCER] Generating data and sending to queue...
+
+[CONSUMER] #1: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #2: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #3: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #4: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #5: X=-0.02 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #6: X=-0.02 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #7: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #8: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #9: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #10: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #11: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #12: X=-0.02 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #13: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #14: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #15: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #16: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #17: X=-0.02 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #18: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #19: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #20: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+
+========================================
+PRODUCER-CONSUMER REPORT #1
+========================================
+Queue status:
+  - Messages waiting: 0
+  - Free space: 10
+
+Production/Consumption:
+  - Samples produced: 20
+  - Samples consumed: 20
+
+Statistics:
+  - Avg X: -0.014 g
+  - Avg Y: -0.010 g
+  - Avg Z: 1.015 g
+
+Last sample:
+  - X = -0.013 g
+  - Y = -0.012 g
+  - Z = 1.016 g
+========================================
+
+[CONSUMER] #21: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #22: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #23: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #24: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #25: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #26: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #27: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #28: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #29: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #30: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #31: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #32: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #33: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #34: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #35: X=-0.02 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #36: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #37: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #38: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #39: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #40: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+
+========================================
+PRODUCER-CONSUMER REPORT #2
+========================================
+Queue status:
+  - Messages waiting: 0
+  - Free space: 10
+
+Production/Consumption:
+  - Samples produced: 40
+  - Samples consumed: 40
+
+Statistics:
+  - Avg X: -0.014 g
+  - Avg Y: -0.010 g
+  - Avg Z: 1.014 g
+
+Last sample:
+  - X = -0.018 g
+  - Y = -0.007 g
+  - Z = 1.012 g
+========================================
+
+[CONSUMER] #41: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #42: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #43: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #44: X=-0.02 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #45: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #46: X=-0.02 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #47: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #48: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #49: X=-0.01 Y=-0.00 Z=1.01 | Queue space: 10
+[CONSUMER] #50: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #51: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #52: X=-0.01 Y=-0.01 Z=1.02 | Queue space: 10
+[CONSUMER] #53: X=-0.01 Y=-0.01 Z=1.01 | Queue space: 10
+[CONSUMER] #54: X=0.00 Y=-0.00 Z=1.01 | Queue space: 10
+[CONSUMER] #55: X=-0.04 Y=-0.15 Z=1.00 | Queue space: 10
+[CONSUMER] #56: X=0.23 Y=-0.10 Z=0.98 | Queue space: 10
+[CONSUMER] #57: X=0.42 Y=-0.05 Z=0.90 | Queue space: 10
+[CONSUMER] #58: X=0.51 Y=0.00 Z=0.84 | Queue space: 10
+[CONSUMER] #59: X=0.60 Y=-0.02 Z=0.77 | Queue space: 10
+[CONSUMER] #60: X=0.60 Y=-0.01 Z=0.81 | Queue space: 10
+
+========================================
+PRODUCER-CONSUMER REPORT #3
+========================================
+Queue status:
+  - Messages waiting: 0
+  - Free space: 10
+
+Production/Consumption:
+  - Samples produced: 50
+  - Samples consumed: 50
+
+Statistics:
+  - Avg X: -0.014 g
+  - Avg Y: -0.009 g
+  - Avg Z: 1.014 g
+
+Last sample:
+  - X = -0.012 g
+  - Y = -0.008 g
+  - Z = 1.013 g
+========================================
+
+[CONSUMER] #61: X=0.62 Y=-0.01 Z=0.77 | Queue space: 10
+[CONSUMER] #62: X=0.65 Y=-0.00 Z=0.76 | Queue space: 10
+[CONSUMER] #63: X=0.70 Y=-0.00 Z=0.72 | Queue space: 10
+[CONSUMER] #64: X=0.74 Y=-0.00 Z=0.67 | Queue space: 10
+[CONSUMER] #65: X=0.77 Y=-0.00 Z=0.64 | Queue space: 10
+[CONSUMER] #66: X=0.80 Y=-0.00 Z=0.59 | Queue space: 10
+[CONSUMER] #67: X=0.81 Y=-0.00 Z=0.58 | Queue space: 10
+[CONSUMER] #68: X=0.82 Y=-0.01 Z=0.57 | Queue space: 10
+[CONSUMER] #69: X=0.82 Y=-0.00 Z=0.56 | Queue space: 10
+[CONSUMER] #70: X=0.82 Y=-0.00 Z=0.57 | Queue space: 10
+[CONSUMER] #71: X=0.82 Y=-0.00 Z=0.56 | Queue space: 10
+[CONSUMER] #72: X=0.69 Y=-0.01 Z=0.69 | Queue space: 10
+
