@@ -30,16 +30,16 @@
 
 ## Timers, Interrupts, and RTOS Basics – Problem Description
 
-17. Write an application to **read potentiometer values via ADC** ⏳
+17. Write an application to **read potentiometer values via ADC** ❌
 18. Write an application code to **measure power supply voltage via ADC** ✅
 19. Write an application to **implement STOP and STANDBY modes for power optimization** ✅
 20. Write an application to **enable hardware interrupt for controlling output** ✅
 21. Write an application to **Control multiple LEDs with different ON/OFF intervals without using delay()** ✅
 22. Write an application to **implement software or hardware debouncing for a button-controlled LED** ✅
 23. Write an application to **modify the delay to make the LED blink faster (e.g., 100ms ON/OFF) using a timer** ✅
-24. Write an application to **Change the LED color based on temperature sensor readings and create an interrupt to give a buzzing sound** ⏳
-25. Write an application to **Control the LED remotely via STM32 with BLE** ⏳
-26. Write an application to **Implement a traffic light sequence using Red, Yellow, and Green LEDs for STM32F401RE development board** ⏳
+24. Write an application to **Change the LED color based on temperature sensor readings and create an interrupt to give a buzzing sound** ❌
+25. Write an application to **Control the LED remotely via STM32 with BLE** ❌
+26. Write an application to **Implement a traffic light sequence using Red, Yellow, and Green LEDs for STM32F401RE development board** ❌
 
 ---
 
