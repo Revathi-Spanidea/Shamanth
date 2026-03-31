@@ -1,0 +1,77 @@
+#include <Arduino.h>
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+
+const char* ssid = "iSprout-TEST";
+const char* password = "isprout@987";
+
+AsyncWebServer server(80);
+
+String uartData = "";
+
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+<title>ESP32 UART Monitor</title>
+<style>
+body { font-family: Arial; text-align: center; }
+#data { font-size: 30px; color: blue; }
+</style>
+</head>
+<body>
+
+<h2>UART Data</h2>
+<div id="data">Waiting...</div>
+
+<script>
+setInterval(function() {
+  fetch("/uart")
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById("data").innerHTML = data;
+  });
+}, 500);
+</script>
+
+</body>
+</html>
+)rawliteral";
+
+void setup()
+{
+    Serial.begin(115200);     // UART source
+
+    WiFi.begin(ssid, password);
+
+    Serial.println("Connecting to WiFi");
+
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("\nConnected");
+    Serial.println(WiFi.localIP());
+
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        request->send_P(200, "text/html", index_html);
+    });
+
+    server.on("/uart", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        request->send(200, "text/plain", uartData);
+    });
+
+    server.begin();
+}
+
+void loop()
+{
+    if (Serial.available())
+    {
+        uartData = Serial.readStringUntil('\n');
+    }
+}

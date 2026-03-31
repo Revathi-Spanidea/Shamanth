@@ -69,3 +69,28 @@ RTOS in Embedded Applications
 13. Write an application to **Use an external interrupt (e.g., button press) to wake up a FreeRTOS task** ✅  
 14. Write an application to **Implement Producer-Consumer model with queues (sensor data generation and processing)** ✅  
 15. Write an application to **Create a high-priority task waiting for a resource held by a low-priority task and observe priority inversion** ✅  
+
+
+---
+
+## ESP32 LyraT Mini – Task Implementation
+
+### PlatformIO Tasks:
+
+1. Write an application to **demonstrate ADC-based button inputs available on the board** ✅  
+2. Write an application to **implement BLE beacon broadcasting** ✅  
+3. Write an application to **control LED blinking via BLE using a smartphone** ✅  
+4. Write an application to **host a Wi-Fi web server to control LED blinking** ✅  
+5. Write an application to **run Wi-Fi and BLE simultaneously on the ESP32** ✅  
+6. Write an application to **generate a beep sound using the audio jack output** ✅   
+
+---
+
+### ESP-IDF Tasks:
+
+1. Write an application to **blink an LED using the ESP-IDF framework** ✅  
+2. Write an application to **demonstrate FreeRTOS mutex usage in ESP-IDF** ✅  
+3. Write an application to **demonstrate FreeRTOS semaphore mechanisms in ESP-IDF** ✅  
+4. Write an application to **implement inter-task communication using FreeRTOS queues** ✅  
+5. Write an application to **demonstrate task prioritization using UART print statements in FreeRTOS** ✅  
+6. Write an application to **demonstrate the onboard microphone functionality** ✅ 

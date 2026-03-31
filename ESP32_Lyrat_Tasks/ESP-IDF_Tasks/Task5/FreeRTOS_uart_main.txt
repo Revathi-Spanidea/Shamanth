@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_log.h"
+
+static const char *TAG_HIGH   = "HIGH_PRIORITY";
+static const char *TAG_MEDIUM = "MEDIUM_PRIORITY";
+static const char *TAG_LOW    = "LOW_PRIORITY";
+
+// ─── Task 1 : HIGH priority ───────────────────────────────────────────────────
+void task_high(void *pvParameters)
+{
+    while (1) {
+        ESP_LOGE(TAG_HIGH, "I am HIGH priority task   (priority=5) [ERROR level]");
+        vTaskDelay(pdMS_TO_TICKS(1000));
+    }
+}
+
+// ─── Task 2 : MEDIUM priority ─────────────────────────────────────────────────
+void task_medium(void *pvParameters)
+{
+    while (1) {
+        ESP_LOGW(TAG_MEDIUM, "I am MEDIUM priority task (priority=3) [WARN level]");
+        vTaskDelay(pdMS_TO_TICKS(2000));
+    }
+}
+
+// ─── Task 3 : LOW priority ────────────────────────────────────────────────────
+void task_low(void *pvParameters)
+{
+    while (1) {
+        ESP_LOGI(TAG_LOW, "I am LOW priority task    (priority=1) [INFO level]");
+        vTaskDelay(pdMS_TO_TICKS(3000));
+    }
+}
+
+void app_main(void)
+{
+    ESP_LOGI("MAIN", "Starting 3 FreeRTOS tasks...");
+
+    // xTaskCreate(function, name, stack, params, PRIORITY, handle)
+    xTaskCreate(task_high,   "TaskHigh",   2048, NULL, 5, NULL);
+    xTaskCreate(task_medium, "TaskMedium", 2048, NULL, 3, NULL);
+    xTaskCreate(task_low,    "TaskLow",    2048, NULL, 1, NULL);
+
+    ESP_LOGI("MAIN", "All tasks created.");
+}

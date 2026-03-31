@@ -1,0 +1,147 @@
+#include <Arduino.h>
+#include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
+
+#define LED_PIN 22
+
+const char* ssid = "iSprout-TEST";
+const char* password = "isprout@987";
+
+AsyncWebServer server(80);
+
+bool ledState = false;
+
+/* ---------- BLE UUID ---------- */
+#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+
+BLECharacteristic *pCharacteristic;
+
+/* ---------- Webpage ---------- */
+
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html>
+<head>
+<title>ESP32 LED Monitor</title>
+<style>
+body { font-family: Arial; text-align: center; }
+#led { font-size: 40px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2>ESP32 LED Status</h2>
+
+<div id="led">Checking...</div>
+
+<script>
+setInterval(function() {
+  fetch("/led")
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById("led").innerHTML = data;
+  });
+}, 500);
+</script>
+
+</body>
+</html>
+)rawliteral";
+
+/* ---------- BLE Callback ---------- */
+
+class MyCallbacks : public BLECharacteristicCallbacks
+{
+    void onWrite(BLECharacteristic *pCharacteristic)
+    {
+        std::string value = pCharacteristic->getValue();
+
+        if (value.length() > 0)
+        {
+            if (value[0] == '1')
+            {
+                digitalWrite(LED_PIN, HIGH);
+                ledState = true;
+                Serial.println("LED ON");
+            }
+            else if (value[0] == '0')
+            {
+                digitalWrite(LED_PIN, LOW);
+                ledState = false;
+                Serial.println("LED OFF");
+            }
+        }
+    }
+};
+
+void setup()
+{
+    Serial.begin(115200);
+
+    pinMode(LED_PIN, OUTPUT);
+
+    /* ---------- WiFi ---------- */
+
+    WiFi.begin(ssid, password);
+
+    Serial.println("Connecting to WiFi");
+
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("\nWiFi Connected");
+    Serial.println(WiFi.localIP());
+
+    /* ---------- Web Server ---------- */
+
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        request->send_P(200, "text/html", index_html);
+    });
+
+    server.on("/led", HTTP_GET, [](AsyncWebServerRequest *request)
+    {
+        if (ledState)
+            request->send(200, "text/plain", "LED ON");
+        else
+            request->send(200, "text/plain", "LED OFF");
+    });
+
+    server.begin();
+
+    /* ---------- BLE Setup ---------- */
+
+    BLEDevice::init("ESP32_LED_Control");
+
+    BLEServer *pServer = BLEDevice::createServer();
+
+    BLEService *pService = pServer->createService(SERVICE_UUID);
+
+    pCharacteristic = pService->createCharacteristic(
+                        CHARACTERISTIC_UUID,
+                        BLECharacteristic::PROPERTY_WRITE
+                      );
+
+    pCharacteristic->setCallbacks(new MyCallbacks());
+
+    pService->start();
+
+    BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+    pAdvertising->addServiceUUID(SERVICE_UUID);
+    pAdvertising->start();
+
+    Serial.println("BLE LED Control Ready");
+}
+
+void loop()
+{
+}

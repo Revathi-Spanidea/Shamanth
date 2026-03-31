@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/semphr.h"
+#include "esp_log.h"
+
+#define TAG "MUTEX_DEMO"
+
+// ─── SHARED RESOURCE ──────────────────────────────────────────────────────────
+typedef struct {
+    int     sensor_id;
+    float   temperature;
+    float   humidity;
+    char    status[16];
+} SensorData_t;
+
+static SensorData_t  shared_data = {0};   // shared struct
+static SemaphoreHandle_t mutex;           // protects shared_data
+
+// ═════════════════════════════════════════════════════════════════════════════
+// WRITER TASK — updates the shared struct
+// ═════════════════════════════════════════════════════════════════════════════
+void task_writer(void *pvParameters)
+{
+    int count = 0;
+
+    while (1) {
+        count++;
+
+        // ── Try to take mutex ──────────────────────────────────────────────
+        if (xSemaphoreTake(mutex, pdMS_TO_TICKS(1000)) == pdTRUE) {
+
+            // ── CRITICAL SECTION START ─────────────────────────────────────
+            shared_data.sensor_id    = count;
+            shared_data.temperature  = 25.0f + (count % 10) * 0.5f;
+            shared_data.humidity     = 60.0f + (count % 5)  * 1.0f;
+
+            if (shared_data.temperature > 29.0f)
+                strncpy(shared_data.status, "HOT",    sizeof(shared_data.status));
+            else
+                strncpy(shared_data.status, "NORMAL", sizeof(shared_data.status));
+
+            ESP_LOGW(TAG, "[WRITER] Written  -> ID:%d  Temp:%.1f  Hum:%.1f  Status:%s",
+                     shared_data.sensor_id,
+                     shared_data.temperature,
+                     shared_data.humidity,
+                     shared_data.status);
+            // ── CRITICAL SECTION END ───────────────────────────────────────
+
+            xSemaphoreGive(mutex);   // release mutex
+
+        } else {
+            ESP_LOGE(TAG, "[WRITER] Could not get mutex! Skipping write.");
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(1000));   // write every 1 second
+    }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// READER TASK — reads from the shared struct
+// ═════════════════════════════════════════════════════════════════════════════
+void task_reader(void *pvParameters)
+{
+    SensorData_t local_copy = {0};   // safe local copy
+
+    while (1) {
+        vTaskDelay(pdMS_TO_TICKS(1500));   // read every 1.5 seconds
+
+        // ── Try to take mutex ──────────────────────────────────────────────
+        if (xSemaphoreTake(mutex, pdMS_TO_TICKS(1000)) == pdTRUE) {
+
+            // ── CRITICAL SECTION START ─────────────────────────────────────
+            // Copy shared struct to local — keep critical section SHORT
+            local_copy = shared_data;
+            // ── CRITICAL SECTION END ───────────────────────────────────────
+
+            xSemaphoreGive(mutex);   // release mutex immediately after copy
+
+            // Now safely use local_copy OUTSIDE the mutex
+            ESP_LOGI(TAG, "[READER] Read     -> ID:%d  Temp:%.1f  Hum:%.1f  Status:%s",
+                     local_copy.sensor_id,
+                     local_copy.temperature,
+                     local_copy.humidity,
+                     local_copy.status);
+
+            // Extra logic outside mutex — safe because we use local_copy
+            if (strcmp(local_copy.status, "HOT") == 0) {
+                ESP_LOGE(TAG, "[READER] ⚠ ALERT — Temperature is HIGH: %.1f°C",
+                         local_copy.temperature);
+            }
+
+        } else {
+            ESP_LOGE(TAG, "[READER] Could not get mutex! Skipping read.");
+        }
+    }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// APP MAIN
+// ═════════════════════════════════════════════════════════════════════════════
+void app_main(void)
+{
+    ESP_LOGI(TAG, "=== Mutex Shared Struct Demo ===");
+
+    // Create mutex
+    mutex = xSemaphoreCreateMutex();
+    if (mutex == NULL) {
+        ESP_LOGE(TAG, "Failed to create mutex! Halting.");
+        return;
+    }
+    ESP_LOGI(TAG, "Mutex created successfully.");
+
+    // Create writer task — higher priority writes first
+    xTaskCreate(task_writer, "Writer", 2048, NULL, 5, NULL);
+
+    // Create reader task — lower priority reads after
+    xTaskCreate(task_reader, "Reader", 2048, NULL, 3, NULL);
+
+    ESP_LOGI(TAG, "Tasks started. Writer=priority5  Reader=priority3");
+}

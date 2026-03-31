@@ -1,0 +1,123 @@
+#include <Arduino.h>
+
+/* LED pins */
+#define LED_LSB 22
+#define LED_MSB 27
+
+/* Button ADC pin */
+#define BUTTON_ADC 39
+
+/* ADC thresholds */
+#define NONE_MIN 3600
+
+#define REC_MIN 2650
+#define REC_MAX 3600
+
+#define MODE_MIN 2100
+#define MODE_MAX 2650
+
+#define PLAY_MIN 1600
+#define PLAY_MAX 2100
+
+#define SET_MIN 1100
+#define SET_MAX 1600
+
+#define VOL_DOWN_MIN 600
+#define VOL_DOWN_MAX 1100
+
+#define VOL_UP_MIN 100
+#define VOL_UP_MAX 600
+
+uint8_t counter = 0;
+
+enum Button
+{
+    NONE = 0,
+    REC,
+    MODE,
+    PLAY,
+    SET,
+    VOL_DOWN,
+    VOL_UP
+};
+
+Button lastButton = NONE;
+
+/* Decode ADC to button */
+Button readButton()
+{
+    int adc = analogRead(BUTTON_ADC);
+
+    if (adc > NONE_MIN) return NONE;
+
+    if (adc > REC_MIN && adc <= REC_MAX) return REC;
+    if (adc > MODE_MIN && adc <= MODE_MAX) return MODE;
+    if (adc > PLAY_MIN && adc <= PLAY_MAX) return PLAY;
+    if (adc > SET_MIN && adc <= SET_MAX) return SET;
+    if (adc > VOL_DOWN_MIN && adc <= VOL_DOWN_MAX) return VOL_DOWN;
+    if (adc > VOL_UP_MIN && adc <= VOL_UP_MAX) return VOL_UP;
+
+    return NONE;
+}
+
+/* Update LED binary display */
+void updateLEDs()
+{
+    digitalWrite(LED_LSB, counter & 0x01);
+    digitalWrite(LED_MSB, (counter >> 1) & 0x01);
+}
+
+/* Print button name */
+void printButton(Button btn)
+{
+    switch(btn)
+    {
+        case REC: Serial.println("REC"); break;
+        case MODE: Serial.println("MODE"); break;
+        case PLAY: Serial.println("PLAY"); break;
+        case SET: Serial.println("SET"); break;
+        case VOL_DOWN: Serial.println("VOL-"); break;
+        case VOL_UP: Serial.println("VOL+"); break;
+        default: break;
+    }
+}
+
+void setup()
+{
+    pinMode(LED_LSB, OUTPUT);
+    pinMode(LED_MSB, OUTPUT);
+
+    analogReadResolution(12);
+
+    Serial.begin(115200);
+
+    updateLEDs();
+}
+
+void loop()
+{
+    Button btn = readButton();
+
+    /* edge detection */
+    if(btn != NONE && btn != lastButton)
+    {
+        printButton(btn);
+
+        if(btn == REC)
+            counter++;
+
+        if(btn == MODE)
+            counter--;
+
+        counter &= 0x03;
+
+        updateLEDs();
+
+        Serial.print("Counter: ");
+        Serial.println(counter);
+    }
+
+    lastButton = btn;
+
+    delay(25);
+}

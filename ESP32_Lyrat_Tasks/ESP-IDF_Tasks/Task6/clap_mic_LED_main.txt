@@ -1,0 +1,274 @@
+#include <stdio.h>
+#include <math.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/gpio.h"
+#include "driver/i2c.h"
+#include "driver/i2s_std.h"
+#include "esp_log.h"
+
+static const char *TAG = "MIC_LED";
+
+// ==================== USER CONFIGURABLE MACROS ====================
+// Adjust threshold based on your clap strength
+// Start with lower threshold and increase if needed
+#define SOUND_THRESHOLD     14000    // Start with 2500, then adjust
+#define CLAP_COOLDOWN_MS    500     // Cooldown after clap (milliseconds)
+// ================================================================
+
+// ─── LED ──────────────────────────────────────────────────────
+#define LED_GPIO   GPIO_NUM_22
+
+// ─── POWER ───────────────────────────────────────────────────
+#define PA_CTRL    GPIO_NUM_21
+
+// ─── I2C (ES7243) ───────────────────────────────────────────
+#define I2C_SDA    GPIO_NUM_18
+#define I2C_SCL    GPIO_NUM_23
+#define I2C_PORT   I2C_NUM_0
+#define ES7243_ADDR 0x13
+
+// ─── I2S1 for ES7243 ADC ────────────────────────────────────
+#define I2S_PORT   I2S_NUM_1
+#define I2S_MCLK   GPIO_NUM_0
+#define I2S_BCLK   GPIO_NUM_32
+#define I2S_WS     GPIO_NUM_33
+#define I2S_DIN    GPIO_NUM_36
+
+#define SAMPLE_RATE     16000
+
+static i2s_chan_handle_t rx_handle;
+
+static esp_err_t i2c_write(uint8_t reg, uint8_t val)
+{
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (ES7243_ADDR << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, reg, true);
+    i2c_master_write_byte(cmd, val, true);
+    i2c_master_stop(cmd);
+
+    esp_err_t ret = i2c_master_cmd_begin(I2C_PORT, cmd, pdMS_TO_TICKS(100));
+    i2c_cmd_link_delete(cmd);
+    return ret;
+}
+
+static uint8_t i2c_read(uint8_t reg)
+{
+    uint8_t val = 0;
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (ES7243_ADDR << 1) | I2C_MASTER_WRITE, true);
+    i2c_master_write_byte(cmd, reg, true);
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (ES7243_ADDR << 1) | I2C_MASTER_READ, true);
+    i2c_master_read_byte(cmd, &val, I2C_MASTER_LAST_NACK);
+    i2c_master_stop(cmd);
+    i2c_master_cmd_begin(I2C_PORT, cmd, pdMS_TO_TICKS(100));
+    i2c_cmd_link_delete(cmd);
+    return val;
+}
+
+static void i2c_init(void)
+{
+    i2c_config_t conf = {
+        .mode = I2C_MODE_MASTER,
+        .sda_io_num = I2C_SDA,
+        .scl_io_num = I2C_SCL,
+        .sda_pullup_en = GPIO_PULLUP_ENABLE,
+        .scl_pullup_en = GPIO_PULLUP_ENABLE,
+        .master.clk_speed = 100000,
+    };
+    ESP_ERROR_CHECK(i2c_param_config(I2C_PORT, &conf));
+    ESP_ERROR_CHECK(i2c_driver_install(I2C_PORT, I2C_MODE_MASTER, 0, 0, 0));
+}
+
+static void power_on_audio(void)
+{
+    gpio_reset_pin(PA_CTRL);
+    gpio_set_direction(PA_CTRL, GPIO_MODE_OUTPUT);
+    gpio_set_level(PA_CTRL, 1);
+    vTaskDelay(pdMS_TO_TICKS(500));
+}
+
+static void i2s_init(void)
+{
+    i2s_chan_config_t chan_cfg = {
+        .id = I2S_PORT,
+        .role = I2S_ROLE_MASTER,
+        .dma_desc_num = 8,
+        .dma_frame_num = 240,
+        .auto_clear = true,
+    };
+    
+    ESP_ERROR_CHECK(i2s_new_channel(&chan_cfg, NULL, &rx_handle));
+    
+    i2s_std_config_t std_cfg = {
+        .clk_cfg = {
+            .sample_rate_hz = SAMPLE_RATE,
+            .clk_src = I2S_CLK_SRC_APLL,
+            .mclk_multiple = I2S_MCLK_MULTIPLE_256,
+        },
+        .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(
+                        I2S_DATA_BIT_WIDTH_16BIT,
+                        I2S_SLOT_MODE_MONO),
+        .gpio_cfg = {
+            .mclk = I2S_MCLK,
+            .bclk = I2S_BCLK,
+            .ws   = I2S_WS,
+            .dout = I2S_GPIO_UNUSED,
+            .din  = I2S_DIN,
+        },
+    };
+    
+    ESP_ERROR_CHECK(i2s_channel_init_std_mode(rx_handle, &std_cfg));
+    ESP_ERROR_CHECK(i2s_channel_enable(rx_handle));
+}
+
+static void es7243_init_with_higher_gain(void)
+{
+    ESP_LOGI(TAG, "Initializing ES7243 with HIGHER GAIN...");
+    
+    // Step 1: Set master mode, software mode, single speed mode
+    i2c_write(0x00, 0x03);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 2: Mute ADC during configuration
+    i2c_write(0x05, 0x1B);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 3: Reset ADC
+    i2c_write(0x06, 0x10);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 4: Set I2S format, 16-bit
+    i2c_write(0x01, 0x0C);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 5: Set LRCK ratio for 16kHz (MCLK = 256 * Fs)
+    i2c_write(0x02, 0x10);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 6: Set BCLK ratio (MCLK / BCLK = 4)
+    i2c_write(0x03, 0x04);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 7: Set ADC clock divider
+    i2c_write(0x04, 0x02);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 8: Set CSM in normal mode, OSR=32
+    i2c_write(0x0D, 0xA0);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 9: Enable analog input, set HIGHER PGA GAIN
+    // 0x43 = 27dB, 0x83 = 27dB with different setting
+    // Try maximum gain: 0x8F = 27dB + boost
+    i2c_write(0x08, 0x8F);  // Higher gain setting
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 10: Un-reset ADC
+    i2c_write(0x06, 0x00);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    // Step 11: Un-mute ADC
+    i2c_write(0x05, 0x13);
+    vTaskDelay(pdMS_TO_TICKS(10));
+    
+    ESP_LOGI(TAG, "ES7243 initialized with higher gain");
+}
+
+static int calculate_rms(int16_t *buf, int samples)
+{
+    int32_t sum = 0;
+    for (int i = 0; i < samples; i++) {
+        sum += buf[i];
+    }
+    int32_t mean = sum / samples;
+    
+    int64_t sq_sum = 0;
+    for (int i = 0; i < samples; i++) {
+        int32_t diff = buf[i] - mean;
+        sq_sum += diff * diff;
+    }
+    
+    return sqrt((double)sq_sum / samples);
+}
+
+void app_main(void)
+{
+    gpio_set_direction(LED_GPIO, GPIO_MODE_OUTPUT);
+    gpio_set_level(LED_GPIO, 0);
+    
+    power_on_audio();
+    i2s_init();
+    vTaskDelay(pdMS_TO_TICKS(200));
+    i2c_init();
+    vTaskDelay(pdMS_TO_TICKS(100));
+    
+    // Initialize ES7243 with higher gain
+    es7243_init_with_higher_gain();
+    
+    ESP_LOGI(TAG, "========================================");
+    ESP_LOGI(TAG, "Clap Detection Ready!");
+    ESP_LOGI(TAG, "Threshold: %d", SOUND_THRESHOLD);
+    ESP_LOGI(TAG, "========================================");
+    
+    // Flush initial data
+    int16_t flush_buf[256];
+    size_t flush_bytes;
+    for (int i = 0; i < 20; i++) {
+        i2s_channel_read(rx_handle, flush_buf, sizeof(flush_buf), 
+                        &flush_bytes, pdMS_TO_TICKS(20));
+    }
+    
+    int16_t buf[256];
+    size_t bytes_read;
+    int led_state = 0;
+    int threshold = SOUND_THRESHOLD;
+    int frame_count = 0;
+    int clap_cooldown = 0;
+    
+    ESP_LOGI(TAG, "Monitoring... Clap your hands to toggle LED!");
+    ESP_LOGI(TAG, "========================================");
+    
+    while (1) {
+        esp_err_t err = i2s_channel_read(rx_handle, buf, sizeof(buf), 
+                                         &bytes_read, pdMS_TO_TICKS(100));
+        
+        if (err != ESP_OK) {
+            vTaskDelay(pdMS_TO_TICKS(10));
+            continue;
+        }
+        
+        if (bytes_read == 0) {
+            vTaskDelay(pdMS_TO_TICKS(10));
+            continue;
+        }
+        
+        int samples = bytes_read / sizeof(int16_t);
+        int rms = calculate_rms(buf, samples);
+        
+        // Print every 50 frames
+        if (frame_count % 50 == 0) {
+            ESP_LOGI(TAG, "RMS: %5d | Threshold: %d | LED: %s", 
+                     rms, threshold, led_state ? "ON" : "OFF");
+        }
+        
+        // Clap detection
+        if (clap_cooldown == 0 && rms > threshold) {
+            led_state ^= 1;
+            gpio_set_level(LED_GPIO, led_state);
+            ESP_LOGW(TAG, "👏 CLAP DETECTED! RMS: %d > %d | LED: %s", 
+                     rms, threshold, led_state ? "ON" : "OFF");
+            clap_cooldown = CLAP_COOLDOWN_MS / 20;
+        }
+        
+        if (clap_cooldown > 0) {
+            clap_cooldown--;
+        }
+        
+        frame_count++;
+        vTaskDelay(pdMS_TO_TICKS(20));
+    }
+}

@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/semphr.h"
+#include "esp_log.h"
+
+#define TAG "SEMAPHORE_DEMO"
+
+// ─── SHARED RESOURCE ──────────────────────────────────────────────────────────
+typedef struct {
+    int     sensor_id;
+    float   temperature;
+    float   humidity;
+    char    status[16];
+} SensorData_t;
+
+static SensorData_t      shared_data = {0};
+static SemaphoreHandle_t data_ready;     // binary semaphore — signals new data
+
+// ═════════════════════════════════════════════════════════════════════════════
+// WRITER TASK — updates struct THEN gives semaphore to signal reader
+// ═════════════════════════════════════════════════════════════════════════════
+void task_writer(void *pvParameters)
+{
+    int count = 0;
+
+    while (1) {
+        count++;
+
+        // ── Write directly — no locking needed ────────────────────────────
+        // (Only ONE writer exists, so no race condition on write side)
+        shared_data.sensor_id   = count;
+        shared_data.temperature = 20.0f + (count % 10) * 1.0f;
+        shared_data.humidity    = 55.0f + (count % 8)  * 1.5f;
+
+        if (shared_data.temperature >= 28.0f)
+            strncpy(shared_data.status, "HOT",    sizeof(shared_data.status));
+        else if (shared_data.temperature >= 24.0f)
+            strncpy(shared_data.status, "WARM",   sizeof(shared_data.status));
+        else
+            strncpy(shared_data.status, "NORMAL", sizeof(shared_data.status));
+
+        ESP_LOGW(TAG, "─────────────────────────────────────────────");
+        ESP_LOGW(TAG, "[WRITER] Updated  -> ID:%d  Temp:%.1f°C  Hum:%.1f%%  Status:%s",
+                 shared_data.sensor_id,
+                 shared_data.temperature,
+                 shared_data.humidity,
+                 shared_data.status);
+
+        // ── Signal reader that new data is ready ───────────────────────────
+        xSemaphoreGive(data_ready);
+        ESP_LOGW(TAG, "[WRITER] Semaphore GIVEN — reader may now proceed");
+
+        vTaskDelay(pdMS_TO_TICKS(2000));   // produce new data every 2 seconds
+    }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// READER TASK — BLOCKS on semaphore, reads only after writer signals
+// ═════════════════════════════════════════════════════════════════════════════
+void task_reader(void *pvParameters)
+{
+    SensorData_t local_copy = {0};
+
+    while (1) {
+
+        ESP_LOGI(TAG, "[READER] Waiting for semaphore...");
+
+        // ── Block here until writer gives semaphore ────────────────────────
+        if (xSemaphoreTake(data_ready, pdMS_TO_TICKS(5000)) == pdTRUE) {
+
+            // ── Safe to read — writer has finished updating ────────────────
+            local_copy = shared_data;   // snapshot
+
+            ESP_LOGI(TAG, "[READER] Semaphore TAKEN — reading data");
+            ESP_LOGI(TAG, "[READER] Got      -> ID:%d  Temp:%.1f°C  Hum:%.1f%%  Status:%s",
+                     local_copy.sensor_id,
+                     local_copy.temperature,
+                     local_copy.humidity,
+                     local_copy.status);
+
+            // ── Business logic on local copy ──────────────────────────────
+            if (strcmp(local_copy.status, "HOT") == 0) {
+                ESP_LOGE(TAG, "[READER] ⚠ ALERT — Temp critically HIGH: %.1f°C",
+                         local_copy.temperature);
+            } else if (strcmp(local_copy.status, "WARM") == 0) {
+                ESP_LOGW(TAG, "[READER] ⚡ WARN  — Temp is WARM: %.1f°C",
+                         local_copy.temperature);
+            } else {
+                ESP_LOGI(TAG, "[READER] ✔ OK    — Temp is NORMAL: %.1f°C",
+                         local_copy.temperature);
+            }
+
+        } else {
+            // Writer never gave semaphore within 5 seconds
+            ESP_LOGE(TAG, "[READER] TIMEOUT — No data from writer for 5s!");
+        }
+    }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+// APP MAIN
+// ═════════════════════════════════════════════════════════════════════════════
+void app_main(void)
+{
+    ESP_LOGI(TAG, "=== Binary Semaphore Signal Demo ===");
+
+    // Create binary semaphore — starts EMPTY so reader blocks immediately
+    data_ready = xSemaphoreCreateBinary();
+    if (data_ready == NULL) {
+        ESP_LOGE(TAG, "Failed to create semaphore! Halting.");
+        return;
+    }
+    ESP_LOGI(TAG, "Binary semaphore created (starts EMPTY — reader will block)");
+
+    // Writer higher priority so it always writes before reader runs
+    xTaskCreate(task_writer, "Writer", 2048, NULL, 5, NULL);
+    xTaskCreate(task_reader, "Reader", 2048, NULL, 3, NULL);
+
+    ESP_LOGI(TAG, "Tasks started. Writer=priority5  Reader=priority3");
+}

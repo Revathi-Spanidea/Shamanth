@@ -1,0 +1,42 @@
+#include <Arduino.h>
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEBeacon.h>
+#include <BLEAdvertising.h>
+
+#define BEACON_UUID "12345678-1234-5678-1234-56789ABCDEF0"
+
+void setup()
+{
+    Serial.begin(115200);
+    Serial.println("Starting BLE Beacon");
+
+    BLEDevice::init("ESP32_Beacon");
+
+    BLEBeacon beacon;
+
+    beacon.setManufacturerId(0x4C00);   // Apple company ID
+    beacon.setProximityUUID(BLEUUID(BEACON_UUID));
+    beacon.setMajor(1);
+    beacon.setMinor(1);
+    beacon.setSignalPower(-59);
+
+    BLEAdvertisementData advertisementData;
+
+    advertisementData.setFlags(0x04);
+    advertisementData.setManufacturerData(beacon.getData());
+
+    BLEAdvertising *advertising = BLEDevice::getAdvertising();
+
+    advertising->setAdvertisementData(advertisementData);
+    advertising->setAdvertisementType(ADV_TYPE_NONCONN_IND);
+
+    advertising->start();
+
+    Serial.println("Beacon advertising started");
+}
+
+void loop()
+{
+    delay(2000);
+}
